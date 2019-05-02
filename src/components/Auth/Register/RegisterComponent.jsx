@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 //CSS Starts
 const StyledWrapper = styled.div`
-  margin-top: 20px;
+  margin: 20px 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;

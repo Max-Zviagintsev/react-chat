@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Form, Input, Tooltip, Icon, Button} from 'antd/lib/index';
 import styled from "styled-components";
+import firebase from '../../../firebase';
 
 //CSS Starts
 const StyledButton = styled(Button)`
@@ -23,12 +24,35 @@ class RegisterFormComponent extends Component {
         autoCompleteResult: [],
     };
 
+    loginError = (errorMessage) => {
+
+        return (
+            this.props.form.setFields({
+                email: {
+                    errors: [new Error(errorMessage)],
+                },
+                password: {
+                    errors: [new Error(errorMessage)],
+                },
+            })
+        )
+    };
+
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
-            }
+                firebase
+                    .auth()
+                    .createUserWithEmailAndPassword(values.email, values.password)
+                    .then(createdUser => {
+                        console.log(createdUser)
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        this.loginError(err.message)
+                    });
+                    }
         });
     };
 
