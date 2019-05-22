@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Form, Input, Tooltip, Icon, Button} from 'antd/lib/index';
 import styled from "styled-components";
 import firebase from '../../../firebase';
+import md5 from "md5";
 
 //CSS Starts
 const StyledButton = styled(Button)`
@@ -22,6 +23,7 @@ class RegisterFormComponent extends Component {
     state = {
         confirmDirty: false,
         autoCompleteResult: [],
+        usersRef: firebase.database().ref('users')
     };
 
     loginError = (errorMessage) => {
@@ -38,6 +40,13 @@ class RegisterFormComponent extends Component {
         )
     };
 
+    saveUser = createdUser => {
+        return this.state.usersRef.child(createdUser.user.uid).set({
+            name: createdUser.user.displayName,
+            avatar: createdUser.user.photoURL
+        });
+    };
+
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
@@ -46,13 +55,23 @@ class RegisterFormComponent extends Component {
                     .auth()
                     .createUserWithEmailAndPassword(values.email, values.password)
                     .then(createdUser => {
-                        console.log(createdUser)
+                        console.log(createdUser);
+                        createdUser.user.updateProfile({
+                            displayName: values.nickname,
+                            photoURL: `http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
+                        })
+                            .then(() => {
+                                this.saveUser(createdUser)
+                                    .then(() => {
+                                        console.log("user saved");
+                                    });
+                            })
                     })
                     .catch(err => {
                         console.error(err);
                         this.loginError(err.message)
                     });
-                    }
+            }
         });
     };
 

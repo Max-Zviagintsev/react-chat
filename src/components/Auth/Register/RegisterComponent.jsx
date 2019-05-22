@@ -2,7 +2,7 @@ import React from 'react';
 import RegisterFormComponent from "./RegisterFormComponent";
 import styled from "styled-components";
 import {Icon} from "antd";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 //CSS Starts
 const StyledWrapper = styled.div`
@@ -35,7 +35,7 @@ const SubText = styled.div`
 const RegisterComponent = () => {
     return (
         <StyledWrapper>
-            <StyledIcon type="aliwangwang" />
+            <StyledIcon type="aliwangwang"/>
             <StyledH1>Register for ReactChat</StyledH1>
             <StyledFormWrapper>
                 <RegisterFormComponent/>
