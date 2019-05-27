@@ -25,9 +25,7 @@ class RegisterFormComponent extends Component {
         autoCompleteResult: [],
         usersRef: firebase.database().ref('users')
     };
-
     loginError = (errorMessage) => {
-
         return (
             this.props.form.setFields({
                 email: {
@@ -39,14 +37,12 @@ class RegisterFormComponent extends Component {
             })
         )
     };
-
     saveUser = createdUser => {
         return this.state.usersRef.child(createdUser.user.uid).set({
             name: createdUser.user.displayName,
             avatar: createdUser.user.photoURL
         });
     };
-
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
@@ -61,10 +57,8 @@ class RegisterFormComponent extends Component {
                             photoURL: `http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
                         })
                             .then(() => {
-                                this.saveUser(createdUser)
-                                    .then(() => {
-                                        console.log("user saved");
-                                    });
+                                this.saveUser(createdUser);
+                                console.log("user saved");
                             })
                     })
                     .catch(err => {
@@ -74,12 +68,10 @@ class RegisterFormComponent extends Component {
             }
         });
     };
-
     handleConfirmBlur = (e) => {
         const value = e.target.value;
         this.setState({confirmDirty: this.state.confirmDirty || !!value});
     };
-
     compareToFirstPassword = (rule, value, callback) => {
         const form = this.props.form;
         if (value && value !== form.getFieldValue('password')) {
@@ -88,7 +80,6 @@ class RegisterFormComponent extends Component {
             callback();
         }
     };
-
     validateToNextPassword = (rule, value, callback) => {
         const form = this.props.form;
         if (value && this.state.confirmDirty) {
